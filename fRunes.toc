@@ -1,0 +1,10 @@
+## Interface: 50001
+## Title: fRunes
+## Notes: Very low-weight rune tracker for Tukui.
+## Author: Sinaris, Foof
+## Version: 2.0
+## RequiredDeps: Tukui
+
+config.lua
+fRunes.lua
+fRuneStrike.lua
