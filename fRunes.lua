@@ -10,13 +10,40 @@ local S, C, L, G = unpack( Tukui )
 
 if( S.myclass ~= "DEATHKNIGHT" ) then return end
 
+local movable = false
 local colors = fRunesSettings.colors
-
 local runes = {}
 local runemap = fRunesSettings.runemap
 
+local fRunesAnchorFrame = CreateFrame( "Frame", "fRunesAnchorFrame", UIParent )
+fRunesAnchorFrame:Size( 150, 15 )
+fRunesAnchorFrame:SetPoint( "CENTER", UIParent, "CENTER", 0, 100 )
+fRunesAnchorFrame:SetFrameStrata( "TOOLTIP" )
+fRunesAnchorFrame:SetFrameLevel( 20 )
+fRunesAnchorFrame:SetClampedToScreen(true )
+fRunesAnchorFrame:SetTemplate( "Default" )
+fRunesAnchorFrame:CreateShadow( "Default" )
+
+fRunesAnchorFrame.Text = S.SetFontString( fRunesAnchorFrame, C["media"]["uffont"], 12 )
+fRunesAnchorFrame.Text:SetText( "fRunes Anchor" )
+fRunesAnchorFrame.Text:SetPoint( "CENTER" )
+fRunesAnchorFrame:SetMovable( true )
+fRunesAnchorFrame:SetUserPlaced( true )
+fRunesAnchorFrame:RegisterForDrag( "LeftButton", "RightButton" )
+fRunesAnchorFrame:SetScript( "OnDragStart", function( self )
+	self:StartMoving()
+end )
+fRunesAnchorFrame:SetScript( "OnDragStop", function( self )
+	self:StopMovingOrSizing()
+end )
+fRunesAnchorFrame:Hide()
+
 fRunes = CreateFrame( "Frame", "fRunes", UIParent )
-fRunes:SetPoint( "BOTTOM", fRunesSettings.anchor, "BOTTOM", fRunesSettings.x, fRunesSettings.y )
+if( fRunesSettings.displayRpBar ) then
+	fRunes:SetPoint( "BOTTOM", fRunesAnchorFrame, "TOP", 0, 6 + ( fRunesSettings.rpBarThickness or 10 ) )
+else
+	fRunes:SetPoint( "BOTTOM", fRunesAnchorFrame, "TOP", 0, 3 )
+end
 if( fRunesSettings.growthDirection == "VERTICAL" ) then
 	fRunes:SetSize( fRunesSettings.barThickness * 6 + 9, fRunesSettings.barLength )
 else
@@ -153,3 +180,23 @@ RuneFrame:Hide()
 RuneFrame:SetScript( "OnShow", function( self )
 	self:Hide()
 end )
+
+SLASH_FRUNES1 = "/mfr"
+SlashCmdList["FRUNES"] = function()
+	if( InCombatLockdown() ) then
+		print( ERR_NOT_IN_COMBAT )
+		return
+	end
+
+	movable = not movable
+
+	if( movable ) then
+		fRunesAnchorFrame:Show()
+		fRunesAnchorFrame:EnableMouse( true )
+		print( "|cff00FF00fRunes unlocked|r" )
+	else
+		fRunesAnchorFrame:Hide()
+		fRunesAnchorFrame:EnableMouse( false )
+		print( "|cffFF0000fRunes locked|r" )
+	end
+end

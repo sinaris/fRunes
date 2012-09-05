@@ -15,11 +15,10 @@ fRunesSettings = {
 	barLength = 40,
 	barThickness = 14,
 	rpBarThickness = 10,
-	anchor = UIParent,
-	hideOOC = true,
+	hideOOC = false,
 	x = 0,
 	y = 170,
-	growthDirection = "HORIZONTAL", -- HORIZONTAL or VERTICAL
+	growthDirection = "VERTICAL", -- HORIZONTAL or VERTICAL
 
 	displayRpBar = true, -- runic power bar below the runes
 	displayRpBarText = true, -- runic power text on the runic power bar
